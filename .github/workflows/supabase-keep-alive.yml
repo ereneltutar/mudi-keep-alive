@@ -1,0 +1,18 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # Her 3 günde bir, gece saat 03:00'te otomatik çalışır (UTC saatiyle)
+    - cron: '0 3 */3 * *'
+  # İstediğimiz an manuel olarak tetikleyip test edebilmemiz için:
+  workflow_dispatch:
+
+jobs:
+  ping_database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query mudi_ping Table
+        run: |
+          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/mudi_ping?select=*" \
+          -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
